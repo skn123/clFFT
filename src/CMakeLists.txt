@@ -28,6 +28,15 @@ endif( )
 # This becomes the name of the solution file
 project( clFFT )
 
+ADD_DEFINITIONS(-Wno-unknown-attributes -Wno-switch -Wno-invalid-source-encoding -Wno-dangling-else -Wno-unknown-warning-option)
+
+option( IS_AMD_ROCM "Building clFFT for AMD ROCM" OFF )
+IF (IS_AMD_ROCM)
+  ADD_DEFINITIONS(-DAMD_ROCM)
+ELSE()
+  REMOVE_DEFINITIONS(-DAMD_ROCM)
+ENDIF()
+
 # Define a version for the code
 if( NOT DEFINED CLFFT_VERSION_MAJOR )
 	set( CLFFT_VERSION_MAJOR 2 )

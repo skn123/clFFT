@@ -63,7 +63,7 @@ int main( void )
 
     /* Setup clFFT. */
     clfftSetupData fftSetup;
-    err = clfftInitSetupData(&fftSetup);
+    //err = clfftInitSetupData(&fftSetup);
     err = clfftSetup(&fftSetup);
 
     /* Allocate host & initialize data. */

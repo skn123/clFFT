@@ -3489,11 +3489,15 @@ namespace StockhamGenerator
         char* nameVendor = new char[SizeParam_ret];
         clGetDeviceInfo(Dev_ID, CL_DEVICE_VENDOR, SizeParam_ret, nameVendor, NULL);
 
+#ifndef AMD_ROCM
         //nv compiler doesn't support __constant kernel argument
         if (strncmp(nameVendor, "NVIDIA",6)!=0)
           str += "__constant cb_t *cb __attribute__((max_constant_size(32))), ";
         else
           str += "__global cb_t *cb, ";
+#else
+        str += "__global cb_t *cb, ";
+#endif
 
         delete [] nameVendor;
 
@@ -3587,8 +3591,13 @@ namespace StockhamGenerator
 						}
 						else
 						{
-							str += "__global const "; str += rType; str += " * restrict gbInRe, ";
-							str += "__global const "; str += rType; str += " * restrict gbInIm, ";
+#ifndef AMD_ROCM
+              str += "__global const "; str += rType; str += " * restrict gbInRe, ";
+              str += "__global const "; str += rType; str += " * restrict gbInIm, ";
+#else
+              str += "__global "; str += rType; str += " * restrict gbInRe, ";
+              str += "__global "; str += rType; str += " * restrict gbInIm, ";
+#endif
 						}
 
 						if(outInterleaved)
@@ -3617,12 +3626,21 @@ namespace StockhamGenerator
 					{
 						if(inInterleaved)
 						{
-							str += "__global const "; str += r2Type; str += " * restrict gbIn, ";
+#ifndef AMD_ROCM
+              str += "__global const "; str += r2Type; str += " * restrict gbIn, ";
+#else
+              str += "__global "; str += r2Type; str += " * restrict gbIn, ";
+#endif
 						}
 						else
 						{
-							str += "__global const "; str += rType; str += " * restrict gbInRe, ";
-							str += "__global const "; str += rType; str += " * restrict gbInIm, ";
+#ifndef AMD_ROCM
+              str += "__global const "; str += rType; str += " * restrict gbInRe, ";
+              str += "__global const "; str += rType; str += " * restrict gbInIm, ";
+#else
+              str += "__global "; str += rType; str += " * restrict gbInRe, ";
+              str += "__global "; str += rType; str += " * restrict gbInIm, ";
+#endif
 						}
 
 						if(outInterleaved)
